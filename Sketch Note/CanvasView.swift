@@ -10,17 +10,24 @@ import UIKit
 
 class CanvasView: UIView {
 
-    var lineColor:UIColor!
-    var lineWidth:CGFloat!
+    let normalWidth:CGFloat! = 5;
+    let biggerWidth:CGFloat! = 10;
+    
+    var lineColor:UIColor! = UIColor.white;
+    lazy var lineWidth:CGFloat! = normalWidth;
     var path:UIBezierPath!
     var touchPoint:CGPoint!
     var startingPoint:CGPoint!
+    
+    required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
+        self.layer.borderWidth = 2;
+        self.layer.borderColor = lineColor.cgColor;
+    }
 
     override func layoutSubviews() {
         self.clipsToBounds = true
         self.isMultipleTouchEnabled = false
-        lineColor = UIColor.black
-        lineWidth = 5
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -51,9 +58,26 @@ class CanvasView: UIView {
     }
     
     func clearCanvas(){
-        path.removeAllPoints()
+        if path != nil {
+            path.removeAllPoints()
+        }
         self.layer.sublayers = nil
         self.setNeedsDisplay()
+        self.changeToBlack()
+    }
+    
+    func changeToBlack(){
+        lineColor = UIColor.black
+        lineWidth = normalWidth
+    }
+    
+    func changeToGrey(){
+        lineColor = UIColor.gray
+        lineWidth = normalWidth
+    }
+    func changeToErase(){
+        lineColor = UIColor.white
+        lineWidth = biggerWidth
     }
     /*
     // Only override draw() if you perform custom drawing.
